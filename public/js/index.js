@@ -103,6 +103,9 @@ function sendTransaction(isAdding) {
 	// if subtracting funds, convert amount to negative number
 	if (!isAdding) {
 		transaction.value *= -1;
+		alert('Expense added!');
+	} else {
+		alert('Deposit added!');
 	}
 
 	// add to beginning of current array of data
