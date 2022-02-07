@@ -1,27 +1,27 @@
-//create two caches
-const APP_PREFIX = 'budget-site-cache-';
-const VERSION = 'v1';
-const CACHE_NAME = APP_PREFIX + VERSION;
-
+const CACHE_NAME = 'budget-site-cache-v1';
+const DATA_CACHE_NAME = 'budget-data-cache-v1';
 const FILES_TO_CACHE = [
-    "./index.html",
-    "./events.html",
-    "./tickets.html",
-    "./schedule.html",
-    "./assets/css/style.css",
-    "./assets/css/bootstrap.css",
-    "./assets/css/tickets.css",
-    "./dist/app.bundle.js",
-    "./dist/events.bundle.js",
-    "./dist/tickets.bundle.js",
-    "./dist/schedule.bundle.js"
+	'/',
+	'/index.html',
+	'/manifest.json',
+	'/css/styles.css',
+	'/icons/icon-72x72.png',
+	'/icons/icon-96x96.png',
+	'/icons/icon-128x128.png',
+	'/icons/icon-144x144.png',
+	'/icons/icon-152x152.png',
+	'/icons/icon-192x192.png',
+	'/icons/icon-384x384.png',
+	'/icons/icon-512x512.png',
+	'/js/idb.js',
+	'/js/index.js',
 ];
 
 self.addEventListener('install', function (evt) {
 	evt.waitUntil(
 		caches.open(CACHE_NAME).then(cache => {
 			console.log('Your files were pre-cached successfully!');
-			return cache.addAll(FILES_TO_CACHE); //add file to cache
+			return cache.addAll(FILES_TO_CACHE);
 		})
 	);
 
@@ -41,6 +41,7 @@ self.addEventListener('activate', function (evt) {
 			);
 		})
 	);
+
 	self.clients.claim();
 });
 
@@ -48,13 +49,15 @@ self.addEventListener('fetch', function (evt) {
 	if (evt.request.url.includes('/api/')) {
 		evt.respondWith(
 			caches
-				.open(DATA_CACHE_NAME) 
+				.open(DATA_CACHE_NAME)
 				.then(cache => {
-					return fetch(evt.request) 
+					return fetch(evt.request)
 						.then(response => {
 							if (response.status === 200) {
 								cache.put(evt.request.url, response.clone());
-							return response; //return it to the user
+							}
+
+							return response;
 						})
 						.catch(err => {
 							return cache.match(evt.request);
@@ -62,6 +65,7 @@ self.addEventListener('fetch', function (evt) {
 				})
 				.catch(err => console.log(err))
 		);
+
 		return;
 	}
 
