@@ -1,6 +1,6 @@
 let db;
 
-const request = indexedDB.open('budget', 1);
+const request = indexedDB.open('budget_log', 1);
 
 request.onupgradeneeded = function (event) {
 	const db = event.target.result;
@@ -19,15 +19,16 @@ request.onerror = function (event) {
 };
 
 function saveRecord(record) {
-	const transaction = db.transaction(['new_budget'], 'readwrite');
-	const budgetObjectStore = transaction.objectStore('new_budget');
+	const transactions = db.transaction(['new_budget'], 'readwrite');
+	const budgetObjectStore = transactions.objectStore('new_budget');
 	budgetObjectStore.add(record);
 }
 
 function uploadSpending() {
-	const transaction = db.transaction(['new_budget'], 'readwrite');
-	const budgetObjectStore = transaction.objectStore('new_budget');
+	const transactions = db.transaction(['new_budget'], 'readwrite');
+	const budgetObjectStore = transactions.objectStore('new_budget');
 	const getAll = budgetObjectStore.getAll();
+
 	getAll.onsuccess = function () {
 		if (getAll.result.length > 0) {
 			fetch('/api/transaction', {
@@ -43,10 +44,12 @@ function uploadSpending() {
 					if (serverResponse.message) {
 						throw new Error(serverResponse);
 					}
-					const trans = db.transaction(['new_budget'], 'readwrite');
-					const budgetObjectStore = trans.objectStore('new_budget');
+
+					const transactions = db.transaction(['new_budget'], 'readwrite');
+					const budgetObjectStore = transactions.objectStore('new_budget');
 					budgetObjectStore.clear();
-					alert('All offline transactions have been submitted!');
+
+					alert('All offline transactions has been submitted!');
 				})
 				.catch(err => {
 					console.log(err);
