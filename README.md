@@ -2,7 +2,7 @@
 
 ## Description
 
-A social media application where users can create thoughts and leave reactions to other user's thoughts
+A PWA(progressive web app) budget application that keeps track of deposits and expenses.
 
 ## User Story
 
