@@ -39,4 +39,9 @@ Follow these steps to install this project:
     ```
     npm install
     ```
+    
+    4. **Run Program**
+    ```
+    npm start
+    ```
 
